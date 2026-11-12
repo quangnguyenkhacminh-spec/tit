@@ -49,7 +49,6 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
@@ -65,6 +64,7 @@
            ========================================= */
         #page-1 {
             background: linear-gradient(135deg, var(--bg-pink-light) 0%, var(--bg-pink-soft) 100%);
+            justify-content: center;
             z-index: 2;
             padding: 20px;
         }
@@ -173,10 +173,11 @@
                 linear-gradient(90deg, var(--tablecloth-1) 50%, transparent 50%),
                 linear-gradient(var(--tablecloth-2) 50%, transparent 50%);
             background-size: 64px 64px;
+            background-attachment: local;
             z-index: 1;
-            padding: 20px;
-            justify-content: center;
-            gap: 22px;
+            padding: 36px 20px;
+            justify-content: flex-start;
+            gap: 26px;
             overflow-y: auto;
         }
 
@@ -287,31 +288,43 @@
         .blush.left { left: 22px; }
         .blush.right { right: 22px; }
 
-        /* Khung giấy note viết lời nhắn - Đã căn giữa nội dung bên trong */
+        /* =========================================
+           KHUNG GIẤY NOTE VIẾT LỜI NHẮN
+           - Căn lề trái
+           - Cách đều 2 mép trên và dưới 5cm
+           ========================================= */
         .letter-paper {
             background: rgba(255, 255, 255, 0.94);
-            padding: 24px 28px;
+            padding-top: 5cm;
+            padding-bottom: 5cm;
+            padding-left: 32px;
+            padding-right: 32px;
             border-radius: 22px;
             box-shadow: 0 12px 28px rgba(168, 108, 120, 0.16);
             border: 2px dashed #FFB3C1;
             width: 100%;
-            max-width: 440px;
-            min-height: 215px;
-            position: relative;
+            max-width: 460px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            text-align: center;
+            align-items: flex-start;
+            text-align: left;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .letter-content-wrapper {
+            width: 100%;
+            text-align: left;
         }
 
         #typewriter-text {
             font-size: 1.05rem;
             font-weight: 600;
-            line-height: 1.65;
+            line-height: 1.75;
             color: #4A353A;
             white-space: pre-wrap; /* Giữ nguyên xuống dòng */
-            display: inline-block;
+            text-align: left;
         }
 
         /* Con trỏ nhấp nháy khi gõ chữ */
@@ -337,6 +350,8 @@
             align-items: flex-end;
             gap: 18px;
             margin-top: 4px;
+            padding-bottom: 20px;
+            flex-shrink: 0;
         }
 
         .cute-cat {
@@ -366,7 +381,7 @@
             50% { transform: translateY(-4px); }
         }
 
-        /* Tối ưu cho màn hình điện thoại nhỏ */
+        /* Tối ưu cho màn hình điện thoại nhỏ nhưng vẫn giữ nguyên khoảng cách 5cm trên/dưới */
         @media (max-width: 480px) {
             .plate-container {
                 width: 175px;
@@ -381,8 +396,10 @@
                 height: 28px;
             }
             .letter-paper {
-                padding: 18px 20px;
-                min-height: 200px;
+                padding-top: 5cm;
+                padding-bottom: 5cm;
+                padding-left: 22px;
+                padding-right: 22px;
             }
             #typewriter-text {
                 font-size: 0.96rem;
@@ -432,9 +449,9 @@
             </div>
         </div>
 
-        <!-- Khung giấy note viết lời nhắn (Đã căn giữa hoàn toàn) -->
+        <!-- Khung chữ chạy hiệu ứng typewriter: Căn lề trái & cách đều 2 mép trên/dưới 5cm -->
         <div class="letter-paper">
-            <div>
+            <div class="letter-content-wrapper">
                 <span id="typewriter-text"></span><span class="cursor" id="cursor"></span>
             </div>
         </div>
