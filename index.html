@@ -1,266 +1,571 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TÍT ĐÁNG YÊU</title>
-  <style>
-    html, body {
-      height: 100%;
-      padding: 0;
-      margin: 0;
-      background: #000;
-      overflow: hidden;
-    }
-    canvas {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-    .center-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #ea80b0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 26px;
-      font-weight: bold;
-      text-align: center;
-      white-space: nowrap;
-      text-shadow: 0 0 12px #ea80b0, 0 0 25px #ea80b0;
-      animation: heartbeat 1.2s infinite ease-in-out;
-      pointer-events: none;
-      z-index: 10;
-    }
-    @keyframes heartbeat {
-      0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.15);
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ✨</title>
+    <!-- Nhúng font chữ mềm mại, dễ thương hỗ trợ tiếng Việt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CÀI ĐẶT CHUNG & BẢNG MÀU
+           ========================================= */
+        :root {
+            --bg-pink-light: #FFE6EC;
+            --bg-pink-soft: #FFF5F7;
+            --primary-pink: #FF758F;
+            --primary-pink-hover: #FF5C7A;
+            --text-dark: #4A3B3E;
+            --success-green: #2E9E5B;
+            --error-red: #E63946;
+            --tablecloth-1: rgba(255, 182, 193, 0.35);
+            --tablecloth-2: rgba(255, 218, 224, 0.35);
+            --cream-bg: #FFFDF9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-dark);
+        }
+
+        /* Quản lý chuyển đổi giữa 2 trang */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.03);
+        }
+
+        /* =========================================
+           TRANG 1: MÀN HÌNH NHẬP TÊN
+           ========================================= */
+        #page-1 {
+            background: linear-gradient(135deg, var(--bg-pink-light) 0%, var(--bg-pink-soft) 100%);
+            z-index: 2;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(10px);
+            padding: 40px 35px;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(255, 117, 143, 0.18);
+            border: 2px solid #FFFFFF;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card label {
+            display: block;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #D64560;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #name-input {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            background-color: #FFF9FA;
+            border: 2px solid #FFC2D1;
+            border-radius: 16px;
+            outline: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        #name-input:focus {
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 4px rgba(255, 117, 143, 0.15);
+            background-color: #FFFFFF;
+        }
+
+        #submit-btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            background-color: var(--primary-pink);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 6px 15px rgba(255, 117, 143, 0.3);
+        }
+
+        #submit-btn:hover {
+            background-color: var(--primary-pink-hover);
+            transform: translateY(-2px);
+        }
+
+        #submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Dòng thông báo trạng thái bên dưới ô nhập */
+        #feedback-msg {
+            margin-top: 14px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            min-height: 22px;
+            transition: all 0.3s ease;
+        }
+
+        .msg-correct {
+            color: var(--success-green);
+        }
+
+        .msg-incorrect {
+            color: var(--error-red);
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-4px); }
+        }
+
+        /* =========================================
+           TRANG 2: BÀN ĂN SÁNG (KHĂN KẺ CARO)
+           ========================================= */
+        #page-2 {
+            /* Họa tiết khăn trải bàn kẻ caro góc nhìn từ trên xuống */
+            background-color: var(--cream-bg);
+            background-image: 
+                linear-gradient(90deg, var(--tablecloth-1) 50%, transparent 50%),
+                linear-gradient(var(--tablecloth-2) 50%, transparent 50%);
+            background-size: 64px 64px;
+            z-index: 1;
+            padding: 20px;
+            justify-content: center;
+            gap: 22px;
+            overflow-y: auto;
+        }
+
+        /* Đĩa trứng ốp la mặt cười */
+        .plate-container {
+            position: relative;
+            width: 210px;
+            height: 210px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            animation: floatPlate 4s ease-in-out infinite;
+        }
+
+        /* Đĩa sứ trắng */
+        .plate {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 35% 35%, #FFFFFF 0%, #F4F1EE 85%, #E6E0DA 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 16px 32px rgba(138, 92, 102, 0.22),
+                inset 0 2px 6px rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Lòng đĩa bên trong */
+        .plate-inner {
+            width: 76%;
+            height: 76%;
+            border-radius: 50%;
+            border: 2px solid rgba(220, 212, 205, 0.6);
+            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Lòng trắng trứng */
+        .egg-white {
+            width: 145px;
+            height: 132px;
+            background: #FFFDF7;
+            border-radius: 54% 46% 48% 52% / 58% 45% 55% 42%;
+            box-shadow: 
+                0 6px 12px rgba(180, 150, 110, 0.18),
+                inset 0 -3px 6px rgba(242, 226, 196, 0.6);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 2 Lòng đỏ trứng làm đôi mắt */
+        .eyes-row {
+            display: flex;
+            gap: 24px;
+            margin-top: -8px;
+        }
+
+        .egg-yolk {
+            width: 34px;
+            height: 34px;
+            background: radial-gradient(circle at 30% 30%, #FFD54F 0%, #FFB300 70%, #F57C00 100%);
+            border-radius: 50%;
+            box-shadow: 0 3px 6px rgba(230, 126, 34, 0.35);
+            position: relative;
+        }
+
+        /* Điểm sáng lấp lánh trên lòng đỏ */
+        .egg-yolk::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 7px;
+            width: 8px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 50%;
+            transform: rotate(-25deg);
+        }
+
+        /* Miệng cười bằng tương cà / xúc xích */
+        .smile-mouth {
+            width: 46px;
+            height: 22px;
+            border-bottom: 6px solid #E53935;
+            border-radius: 0 0 40px 40px;
+            margin-top: 8px;
+            position: relative;
+        }
+
+        /* 2 chấm má hồng bằng tương cà */
+        .blush {
+            position: absolute;
+            width: 12px;
+            height: 7px;
+            background: rgba(255, 117, 143, 0.45);
+            border-radius: 50%;
+            top: 68px;
+        }
+        .blush.left { left: 22px; }
+        .blush.right { right: 22px; }
+
+        /* Khung giấy note viết lời nhắn */
+        .letter-paper {
+            background: rgba(255, 255, 255, 0.94);
+            padding: 24px 28px;
+            border-radius: 22px;
+            box-shadow: 0 12px 28px rgba(168, 108, 120, 0.16);
+            border: 2px dashed #FFB3C1;
+            width: 100%;
+            max-width: 440px;
+            min-height: 215px;
+            position: relative;
+        }
+
+        #typewriter-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.65;
+            color: #4A353A;
+            white-space: pre-wrap; /* Giữ nguyên xuống dòng */
+        }
+
+        /* Con trỏ nhấp nháy khi gõ chữ */
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background-color: #FF758F;
+            vertical-align: middle;
+            margin-left: 2px;
+            animation: blink 0.75s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Khu vực mấy chú mèo cute bên dưới */
+        .cats-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 18px;
+            margin-top: 4px;
+        }
+
+        .cute-cat {
+            width: 68px;
+            height: 68px;
+            filter: drop-shadow(0 6px 10px rgba(150, 100, 110, 0.18));
+            animation: catBounce 2.2s ease-in-out infinite;
+        }
+
+        .cute-cat:nth-child(2) {
+            width: 78px;
+            height: 78px;
+            animation-delay: 0.3s;
+        }
+
+        .cute-cat:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes catBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        @keyframes floatPlate {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+
+        /* Tối ưu cho màn hình điện thoại nhỏ */
+        @media (max-width: 480px) {
+            .plate-container {
+                width: 175px;
+                height: 175px;
+            }
+            .egg-white {
+                width: 120px;
+                height: 110px;
+            }
+            .egg-yolk {
+                width: 28px;
+                height: 28px;
+            }
+            .letter-paper {
+                padding: 18px 20px;
+                min-height: 200px;
+            }
+            #typewriter-text {
+                font-size: 0.96rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <canvas id="pinkboard"></canvas>
-  <div class="center-text">TÍT ĐÁNG YÊU</div>
 
-  <script>
-    var settings = {
-      particles: {
-        length: 500,
-        duration: 2,
-        velocity: 100,
-        effect: -0.75,
-        size: 30,
-      },
-    };
+    <!-- =========================================
+         TRANG 1: MÀN HÌNH NHẬP TÊN
+         ========================================= -->
+    <section id="page-1" class="page">
+        <div class="login-card">
+            <label for="name-input">Name of my lover</label>
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="name-input" 
+                    placeholder="Nhập tên ở đây..." 
+                    autocomplete="off"
+                >
+                <button id="submit-btn" type="button">Xác nhận</button>
+            </div>
+            <p id="feedback-msg"></p>
+        </div>
+    </section>
 
-    (function() {
-      var b = 0;
-      var c = ["ms", "moz", "webkit", "o"];
-      for (var a = 0; a < c.length && !window.requestAnimationFrame; ++a) {
-        window.requestAnimationFrame = window[c[a] + "RequestAnimationFrame"];
-        window.cancelAnimationFrame = window[c[a] + "CancelAnimationFrame"] || window[c[a] + "CancelRequestAnimationFrame"];
-      }
-      if (!window.requestAnimationFrame) {
-        window.requestAnimationFrame = function(h, e) {
-          var d = new Date().getTime();
-          var f = Math.max(0, 16 - (d - b));
-          var g = window.setTimeout(function() {
-            h(d + f);
-          }, f);
-          b = d + f;
-          return g;
-        };
-      }
-      if (!window.cancelAnimationFrame) {
-        window.cancelAnimationFrame = function(d) {
-          clearTimeout(d);
-        };
-      }
-    }());
+    <!-- =========================================
+         TRANG 2: BÀN ĂN SÁNG & LỜI NHẮN
+         ========================================= -->
+    <section id="page-2" class="page hidden">
+        <!-- Đĩa trứng ốp la mặt cười ở giữa -->
+        <div class="plate-container">
+            <div class="plate">
+                <div class="plate-inner">
+                    <div class="egg-white">
+                        <div class="eyes-row">
+                            <div class="egg-yolk"></div>
+                            <div class="egg-yolk"></div>
+                        </div>
+                        <div class="blush left"></div>
+                        <div class="blush right"></div>
+                        <div class="smile-mouth"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    var Point = (function() {
-      function Point(x, y) {
-        this.x = (typeof x !== 'undefined') ? x : 0;
-        this.y = (typeof y !== 'undefined') ? y : 0;
-      }
-      Point.prototype.clone = function() {
-        return new Point(this.x, this.y);
-      };
-      Point.prototype.length = function(length) {
-        if (typeof length == 'undefined')
-          return Math.sqrt(this.x * this.x + this.y * this.y);
-        this.normalize();
-        this.x *= length;
-        this.y *= length;
-        return this;
-      };
-      Point.prototype.normalize = function() {
-        var length = this.length();
-        this.x /= length;
-        this.y /= length;
-        return this;
-      };
-      return Point;
-    })();
+        <!-- Khung chữ chạy hiệu ứng typewriter -->
+        <div class="letter-paper">
+            <span id="typewriter-text"></span><span class="cursor" id="cursor"></span>
+        </div>
 
-    var Particle = (function() {
-      function Particle() {
-        this.position = new Point();
-        this.velocity = new Point();
-        this.acceleration = new Point();
-        this.age = 0;
-      }
-      Particle.prototype.initialize = function(x, y, dx, dy) {
-        this.position.x = x;
-        this.position.y = y;
-        this.velocity.x = dx;
-        this.velocity.y = dy;
-        this.acceleration.x = dx * settings.particles.effect;
-        this.acceleration.y = dy * settings.particles.effect;
-        this.age = 0;
-      };
-      Particle.prototype.update = function(deltaTime) {
-        this.position.x += this.velocity.x * deltaTime;
-        this.position.y += this.velocity.y * deltaTime;
-        this.velocity.x += this.acceleration.x * deltaTime;
-        this.velocity.y += this.acceleration.y * deltaTime;
-        this.age += deltaTime;
-      };
-      Particle.prototype.draw = function(context, image) {
-        function ease(t) {
-          return (--t) * t * t + 1;
+        <!-- Mấy hình con mèo cute bên dưới dòng chữ -->
+        <div class="cats-container">
+            <!-- Mèo trắng má hồng -->
+            <svg class="cute-cat" viewBox="0 0 100 100">
+                <path d="M22 45 L18 18 L42 32 Z" fill="#FFFFFF" stroke="#5C474C" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M78 45 L82 18 L58 32 Z" fill="#FFFFFF" stroke="#5C474C" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M24 38 L22 24 L36 33 Z" fill="#FFB3C1"/>
+                <path d="M76 38 L78 24 L64 33 Z" fill="#FFB3C1"/>
+                <ellipse cx="50" cy="58" rx="34" ry="28" fill="#FFFFFF" stroke="#5C474C" stroke-width="3.5"/>
+                <circle cx="37" cy="55" r="3.5" fill="#5C474C"/>
+                <circle cx="63" cy="55" r="3.5" fill="#5C474C"/>
+                <ellipse cx="29" cy="62" rx="5" ry="3" fill="#FF8FA3" opacity="0.7"/>
+                <ellipse cx="71" cy="62" rx="5" ry="3" fill="#FF8FA3" opacity="0.7"/>
+                <path d="M45 62 Q47.5 66 50 62 Q52.5 66 55 62" fill="none" stroke="#5C474C" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M12 56 L22 58 M12 63 L22 62 M88 56 L78 58 M88 63 L78 62" stroke="#5C474C" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+
+            <!-- Mèo cam mũm mĩm ôm tim -->
+            <svg class="cute-cat" viewBox="0 0 100 100">
+                <path d="M22 45 L18 16 L42 32 Z" fill="#FFD194" stroke="#5C474C" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M78 45 L82 16 L58 32 Z" fill="#FFD194" stroke="#5C474C" stroke-width="3.5" stroke-linejoin="round"/>
+                <ellipse cx="50" cy="58" rx="35" ry="29" fill="#FFD194" stroke="#5C474C" stroke-width="3.5"/>
+                <!-- Vằn trán -->
+                <path d="M45 31 L45 38 M50 30 L50 40 M55 31 L55 38" stroke="#E09F5A" stroke-width="3" stroke-linecap="round"/>
+                <!-- Mắt cười híp -->
+                <path d="M32 55 Q37 49 42 55" fill="none" stroke="#5C474C" stroke-width="3" stroke-linecap="round"/>
+                <path d="M58 55 Q63 49 68 55" fill="none" stroke="#5C474C" stroke-width="3" stroke-linecap="round"/>
+                <ellipse cx="28" cy="61" rx="5" ry="3" fill="#FF758F" opacity="0.7"/>
+                <ellipse cx="72" cy="61" rx="5" ry="3" fill="#FF758F" opacity="0.7"/>
+                <path d="M45 61 Q47.5 65 50 61 Q52.5 65 55 61" fill="none" stroke="#5C474C" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Trái tim nhỏ phía dưới -->
+                <path d="M50 84 C50 84 38 76 38 69 C38 65 42 63 45 65 C48 67 50 69 50 69 C50 69 52 67 55 65 C58 63 62 65 62 69 C62 76 50 84 50 84 Z" fill="#FF5C7A" stroke="#5C474C" stroke-width="2"/>
+            </svg>
+
+            <!-- Mèo xám sữa dễ thương -->
+            <svg class="cute-cat" viewBox="0 0 100 100">
+                <path d="M22 45 L18 18 L42 32 Z" fill="#E8E2E2" stroke="#5C474C" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M78 45 L82 18 L58 32 Z" fill="#E8E2E2" stroke="#5C474C" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M24 38 L22 24 L36 33 Z" fill="#FFB3C1"/>
+                <path d="M76 38 L78 24 L64 33 Z" fill="#FFB3C1"/>
+                <ellipse cx="50" cy="58" rx="34" ry="28" fill="#E8E2E2" stroke="#5C474C" stroke-width="3.5"/>
+                <circle cx="37" cy="55" r="3.5" fill="#5C474C"/>
+                <circle cx="63" cy="55" r="3.5" fill="#5C474C"/>
+                <ellipse cx="29" cy="62" rx="5" ry="3" fill="#FF8FA3" opacity="0.7"/>
+                <ellipse cx="71" cy="62" rx="5" ry="3" fill="#FF8FA3" opacity="0.7"/>
+                <path d="M45 62 Q47.5 66 50 62 Q52.5 66 55 62" fill="none" stroke="#5C474C" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M12 56 L22 58 M12 63 L22 62 M88 56 L78 58 M88 63 L78 62" stroke="#5C474C" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </section>
+
+    <script>
+        // Danh sách tên hợp lệ chính xác theo yêu cầu
+        const validNames = [
+            "Tít", "tít", "tit",
+            "Lương Bảo Ngọc", "lương bảo ngọc",
+            "bảo ngọc", "Bảo Ngọc",
+            "Ngọc", "ngọc"
+        ];
+
+        // Nội dung lời chúc giữ nguyên từng chữ theo yêu cầu
+        const messageText = `To Tit,
+Chúc Tít dyeu buổi sáng tốt lànhh
+Tớ nhớ tít của tớ lắm
+Tít của tớ dậy ngoan ăn ngoan nha khong đượt bỏ bữa đâuuu
+Tít ngoann lát đi học cẩn thận nha
+From your friend...`;
+
+        const nameInput = document.getElementById('name-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const feedbackMsg = document.getElementById('feedback-msg');
+        const page1 = document.getElementById('page-1');
+        const page2 = document.getElementById('page-2');
+        const typewriterEl = document.getElementById('typewriter-text');
+        const cursorEl = document.getElementById('cursor');
+
+        let isTransitioning = false;
+
+        function checkName() {
+            if (isTransitioning) return;
+
+            // Lấy giá trị người dùng nhập và loại bỏ khoảng trắng thừa ở 2 đầu
+            const userInput = nameInput.value.trim();
+
+            if (validNames.includes(userInput)) {
+                isTransitioning = true;
+                feedbackMsg.textContent = "correct";
+                feedbackMsg.className = "msg-correct";
+
+                // Đợi 0.8 giây để người dùng thấy chữ "correct" rồi chuyển sang trang 2
+                setTimeout(() => {
+                    page1.classList.add('hidden');
+                    page2.classList.remove('hidden');
+                    
+                    // Bắt đầu hiệu ứng gõ chữ sau khi chuyển trang mượt mà
+                    setTimeout(() => {
+                        startTypewriter(messageText, 0);
+                    }, 500);
+                }, 800);
+            } else {
+                // Reset animation rung nếu nhập sai liên tiếp
+                feedbackMsg.className = "";
+                void feedbackMsg.offsetWidth; 
+                feedbackMsg.textContent = "incorrect please try again";
+                feedbackMsg.className = "msg-incorrect";
+            }
         }
-        var size = image.width * ease(this.age / settings.particles.duration);
-        context.globalAlpha = 1 - this.age / settings.particles.duration;
-        context.drawImage(image, this.position.x - size / 2, this.position.y - size / 2, size, size);
-      };
-      return Particle;
-    })();
 
-    var ParticlePool = (function() {
-      var particles,
-          firstActive = 0,
-          firstFree = 0,
-          duration = settings.particles.duration;
+        // Hàm tạo hiệu ứng gõ chữ (Typewriter) từ trên xuống dưới
+        function startTypewriter(text, index) {
+            if (index < text.length) {
+                typewriterEl.textContent += text.charAt(index);
+                
+                // Tạo nhịp gõ tự nhiên: dừng lâu hơn một chút ở dấu xuống dòng
+                const currentChar = text.charAt(index);
+                const delay = (currentChar === '\n') ? 350 : 55;
 
-      function ParticlePool(length) {
-        particles = new Array(length);
-        for (var i = 0; i < particles.length; i++)
-          particles[i] = new Particle();
-      }
-      ParticlePool.prototype.add = function(x, y, dx, dy) {
-        particles[firstFree].initialize(x, y, dx, dy);
-        firstFree++;
-        if (firstFree == particles.length) firstFree = 0;
-        if (firstActive == firstFree) firstActive++;
-        if (firstActive == particles.length) firstActive = 0;
-      };
-      ParticlePool.prototype.update = function(deltaTime) {
-        var i;
-        if (firstActive < firstFree) {
-          for (i = firstActive; i < firstFree; i++)
-            particles[i].update(deltaTime);
+                setTimeout(() => {
+                    startTypewriter(text, index + 1);
+                }, delay);
+            } else {
+                // Gõ xong thì giữ con trỏ nhấp nháy nhẹ nhàng
+                cursorEl.style.opacity = '0.7';
+            }
         }
-        if (firstFree < firstActive) {
-          for (i = firstActive; i < particles.length; i++)
-            particles[i].update(deltaTime);
-          for (i = 0; i < firstFree; i++)
-            particles[i].update(deltaTime);
-        }
-        while (particles[firstActive].age >= duration && firstActive != firstFree) {
-          firstActive++;
-          if (firstActive == particles.length) firstActive = 0;
-        }
-      };
-      ParticlePool.prototype.draw = function(context, image) {
-        if (firstActive < firstFree) {
-          for (i = firstActive; i < firstFree; i++)
-            particles[i].draw(context, image);
-        }
-        if (firstFree < firstActive) {
-          for (i = firstActive; i < particles.length; i++)
-            particles[i].draw(context, image);
-          for (i = 0; i < firstFree; i++)
-            particles[i].draw(context, image);
-        }
-      };
-      return ParticlePool;
-    })();
 
-    (function(canvas) {
-      var context = canvas.getContext('2d'),
-          particles = new ParticlePool(settings.particles.length),
-          particleRate = settings.particles.length / settings.particles.duration,
-          time;
+        // Bắt sự kiện khi bấm nút Xác nhận
+        submitBtn.addEventListener('click', checkName);
 
-      function pointOnHeart(t) {
-        return new Point(
-          160 * Math.pow(Math.sin(t), 3),
-          130 * Math.cos(t) - 50 * Math.cos(2 * t) - 20 * Math.cos(3 * t) - 10 * Math.cos(4 * t) + 25
-        );
-      }
-
-      var image = (function() {
-        var canvas = document.createElement('canvas'),
-            context = canvas.getContext('2d');
-        canvas.width = settings.particles.size;
-        canvas.height = settings.particles.size;
-        function to(t) {
-          var point = pointOnHeart(t);
-          point.x = settings.particles.size / 2 + point.x * settings.particles.size / 350;
-          point.y = settings.particles.size / 2 - point.y * settings.particles.size / 350;
-          return point;
-        }
-        context.beginPath();
-        var t = -Math.PI;
-        var point = to(t);
-        context.moveTo(point.x, point.y);
-        while (t < Math.PI) {
-          t += 0.01;
-          point = to(t);
-          context.lineTo(point.x, point.y);
-        }
-        context.closePath();
-        context.fillStyle = '#ea80b0';
-        context.fill();
-        var image = new Image();
-        image.src = canvas.toDataURL();
-        return image;
-      })();
-
-      function render() {
-        requestAnimationFrame(render);
-        var newTime = new Date().getTime() / 1000,
-            deltaTime = newTime - (time || newTime);
-        time = newTime;
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        var amount = particleRate * deltaTime;
-        for (var i = 0; i < amount; i++) {
-          var pos = pointOnHeart(Math.PI - 2 * Math.PI * Math.random());
-          var dir = pos.clone().length(settings.particles.velocity);
-          particles.add(canvas.width / 2 + pos.x, canvas.height / 2 - pos.y, dir.x, -dir.y);
-        }
-        particles.update(deltaTime);
-        particles.draw(context, image);
-      }
-
-      function onResize() {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-      }
-      window.onresize = onResize;
-
-      setTimeout(function() {
-        onResize();
-        render();
-      }, 10);
-    })(document.getElementById('pinkboard'));
-  </script>
+        // Bắt sự kiện khi nhấn phím Enter trong ô nhập liệu
+        nameInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkName();
+            }
+        });
+    </script>
 </body>
 </html>
