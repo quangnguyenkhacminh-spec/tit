@@ -287,7 +287,7 @@
         .blush.left { left: 22px; }
         .blush.right { right: 22px; }
 
-        /* Khung giấy note viết lời nhắn */
+        /* Khung giấy note viết lời nhắn - Đã căn giữa nội dung bên trong */
         .letter-paper {
             background: rgba(255, 255, 255, 0.94);
             padding: 24px 28px;
@@ -298,6 +298,11 @@
             max-width: 440px;
             min-height: 215px;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         #typewriter-text {
@@ -306,6 +311,7 @@
             line-height: 1.65;
             color: #4A353A;
             white-space: pre-wrap; /* Giữ nguyên xuống dòng */
+            display: inline-block;
         }
 
         /* Con trỏ nhấp nháy khi gõ chữ */
@@ -426,9 +432,11 @@
             </div>
         </div>
 
-        <!-- Khung chữ chạy hiệu ứng typewriter -->
+        <!-- Khung giấy note viết lời nhắn (Đã căn giữa hoàn toàn) -->
         <div class="letter-paper">
-            <span id="typewriter-text"></span><span class="cursor" id="cursor"></span>
+            <div>
+                <span id="typewriter-text"></span><span class="cursor" id="cursor"></span>
+            </div>
         </div>
 
         <!-- Mấy hình con mèo cute bên dưới dòng chữ -->
